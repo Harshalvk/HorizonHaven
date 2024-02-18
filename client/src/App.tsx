@@ -1,4 +1,5 @@
-import {Routes, Route} from 'react-router-dom' 
+import {Routes, Route} from 'react-router-dom'
+import {Toaster} from 'react-hot-toast' 
 
 import Home from './Pages/Home'
 import Profile from './Pages/Profile'
@@ -12,6 +13,7 @@ function App() {
   return (
     <>
     <Navbar/>
+    <Toaster/>
       <Routes>
         <Route path='/' element={<Home/>}/>
         <Route path='/profile' element={<Profile/>}/>

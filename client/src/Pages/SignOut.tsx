@@ -1,38 +1,67 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import {toast} from 'react-hot-toast'
 
 export default function SignOut() {
   const inputStyle = "p-3 bg-slate-100 rounded focus:outline-none";
 
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({});
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      await axios.post('/api/user/signup', {formData}, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(() => {
+        toast.success('User created successfully!', {
+          position: 'top-right',
+          
+        })
+      })
+    } catch (error) {
+      console.log(error)
+      toast.error('User not created', {
+        position: 'top-right'
+      })
+    }
+  };
 
   return (
     <>
       <div className="p-3 max-w-lg mx-auto">
         <h1 className="text-center text-3xl font-semibold mb-4">Sign UP</h1>
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="Username"
             className={inputStyle}
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
+            id="username"
+            onChange={handleOnChange}
           />
           <input
             type="email"
             placeholder="Email"
             className={inputStyle}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            id="email"
+            onChange={handleOnChange}
           />
           <input
             type="Password"
             placeholder="Password"
             className={inputStyle}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            id="password"
+            onChange={handleOnChange}
           />
           <button className="bg-slate-700 rounded-md p-3 text-xl uppercase text-white hover:bg-slate-600">
             Sign Up
