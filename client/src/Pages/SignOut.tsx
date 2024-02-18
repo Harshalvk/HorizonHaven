@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {toast} from 'react-hot-toast'
-
+  
 export default function SignOut() {
   const inputStyle = "p-3 bg-slate-100 rounded focus:outline-none";
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false)
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -18,6 +20,7 @@ export default function SignOut() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      setLoading(true)
       await axios.post('/api/user/signup', {formData}, {
         headers: {
           'Content-Type': 'application/json'
@@ -26,8 +29,9 @@ export default function SignOut() {
       .then(() => {
         toast.success('User created successfully!', {
           position: 'top-right',
-          
         })
+        navigate('/sign-in')
+        setLoading(false)
       })
     } catch (error) {
       console.log(error)
@@ -35,6 +39,7 @@ export default function SignOut() {
         position: 'top-right'
       })
     }
+    setLoading(false)
   };
 
   return (
@@ -63,8 +68,8 @@ export default function SignOut() {
             id="password"
             onChange={handleOnChange}
           />
-          <button className="bg-slate-700 rounded-md p-3 text-xl uppercase text-white hover:bg-slate-600">
-            Sign Up
+          <button disabled={loading} className="bg-slate-700 rounded-md p-3 text-xl uppercase text-white hover:bg-slate-600">
+            {loading ? 'Loading...': 'Sign Up'}
           </button>
           <button className="bg-red-700 rounded-md p-3 text-xl uppercase text-white hover:bg-red-600">
             Continue with google
