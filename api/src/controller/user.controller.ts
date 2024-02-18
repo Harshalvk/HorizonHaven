@@ -12,7 +12,9 @@ export const signUp = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { username, email, password } = req.body;
+  console.log(req.body.formData)
+  const { username, email, password } = req.body.formData
+  console.log(password)
   const findUser = await User.findOne({ email });
   if (!findUser) {
     const hashedPassword = await bcrypt.hash(password, 10);
