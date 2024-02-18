@@ -12,7 +12,11 @@ export const signUp = async (req: Request, res: Response) => {
   if(!findUser){
     const hashedPassword = await bcrypt.hash(password, 10)
     const newUser = new User({username, email, password: hashedPassword})
-    await newUser.save()
-    res.send("User created successfully").status(201)
+    try {
+      await newUser.save()
+      res.send("User created successfully").status(201)
+    } catch (error: any) {
+      res.status(500).json({'🔴 Error while signup:': error.message})
+    }
   }
 };
