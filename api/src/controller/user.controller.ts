@@ -34,7 +34,7 @@ export const signIn = async (
   next: NextFunction
 ) => {
   console.log(req.body);
-  const { email, password } = req.body;
+  const { email, password } = req.body.formData;
   try {
     const validUser = await User.findOne({ email });
     if (!validUser) return next(errorHandler(400, "Invalid user credentials"));
