@@ -34,7 +34,6 @@ export default function SignUp() {
         setLoading(false)
       })
     } catch (error) {
-      console.log(error)
       toast.error('User not created', {
         position: 'top-right'
       })

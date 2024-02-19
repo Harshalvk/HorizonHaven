@@ -21,7 +21,7 @@ export default function OAuth() {
         {
           name: result.user.displayName,
           email: result.user.email,
-          photo: result.user.photoURL,
+          avatar: result.user.photoURL,
         },
         {
           headers: {
@@ -29,7 +29,6 @@ export default function OAuth() {
           },
         }
       );
-      console.log(res);
       dispatch(signInSuccess(res.data));
       navigate('/')
 
