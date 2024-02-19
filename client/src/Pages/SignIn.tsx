@@ -23,7 +23,7 @@ function SignIn() {
     e.preventDefault()
     try {
       setLoading(true)
-      await axios.post('/api/user/signin', {formData}, {
+      await axios.post('/api/user/signin', formData, {
         headers: {
           'Content-Type': 'application/json'
         }

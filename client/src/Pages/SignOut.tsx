@@ -21,7 +21,7 @@ export default function SignOut() {
     e.preventDefault();
     try {
       setLoading(true)
-      await axios.post('/api/user/signup', {formData}, {
+      await axios.post('/api/user/signup', formData, {
         headers: {
           'Content-Type': 'application/json'
         }
