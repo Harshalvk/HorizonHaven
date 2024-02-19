@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {toast} from 'react-hot-toast'
   
-export default function SignOut() {
+export default function SignUp() {
   const inputStyle = "p-3 bg-slate-100 rounded focus:outline-none";
   const navigate = useNavigate()
 
