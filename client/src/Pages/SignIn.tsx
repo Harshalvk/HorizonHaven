@@ -8,6 +8,7 @@ import {
   signInSuccess,
   signInFailure,
 } from "../redux/user/userSlice";
+import OAuth from "../Components/OAuth";
 
 function SignIn() {
   const inputStyle = "p-3 bg-slate-100 rounded focus:outline-none";
@@ -50,6 +51,9 @@ function SignIn() {
       }
     } catch (error) {
       dispatch(signInFailure(error.response.data.message));
+      toast.error(error.response.data.message,{
+        position: 'top-right'
+      })
     }
   };
   
@@ -79,6 +83,7 @@ function SignIn() {
           >
             {loading ? "Loading..." : "Login"}
           </button>
+          <OAuth/>
         </form>
         <p className="text-center mt-4">
           Create an account?{" "}
