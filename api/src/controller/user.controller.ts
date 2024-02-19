@@ -13,9 +13,7 @@ export const signUp = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.body);
   const { username, email, password } = req.body;
-  console.log(password);
   const findUser = await User.findOne({ email });
   if (!findUser) {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -57,7 +55,6 @@ export const google = async (
 ) => {
   try {
     const user = await User.findOne({ email: req.body.email });
-    console.log(user);
     if (user) {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
       const { password: pass, ...rest } = user._doc;
@@ -76,7 +73,7 @@ export const google = async (
           Math.random().toString(36).slice(-4),
         email: req.body.email,
         password: hashedPassword,
-        avatar: req.body.photo,
+        avatar: req.body.avatar,
       });
       await newUser.save();
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
