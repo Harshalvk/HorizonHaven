@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import {toast} from 'react-hot-toast'
+import OAuth from "../Components/OAuth";
   
 export default function SignUp() {
   const inputStyle = "p-3 bg-slate-100 rounded focus:outline-none";
@@ -70,9 +71,7 @@ export default function SignUp() {
           <button disabled={loading} className="bg-slate-700 rounded-md p-3 text-xl uppercase text-white hover:bg-slate-600">
             {loading ? 'Loading...': 'Sign Up'}
           </button>
-          <button className="bg-red-700 rounded-md p-3 text-xl uppercase text-white hover:bg-red-600">
-            Continue with google
-          </button>
+          <OAuth/>
         </form>
         <p className="text-center mt-4">
           Already have an account?{" "}

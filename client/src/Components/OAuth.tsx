@@ -29,6 +29,7 @@ export default function OAuth() {
           },
         }
       );
+      console.log(res)
       dispatch(signInSuccess(res.data));
       navigate('/')
 

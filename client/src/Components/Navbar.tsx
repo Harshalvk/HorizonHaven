@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 
 function Navbar() {
   const { currentUser } = useSelector((state) => state.user);
+  console.log(currentUser)
   return (
     <header className=" bg-slate-200 shadow-sm">
       <div className="flex justify-between items-center p-3 max-w-6xl mx-auto">
