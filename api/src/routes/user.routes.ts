@@ -1,6 +1,13 @@
 import { Router } from "express";
 
-import { signUp, test, signIn, google, updateUser } from "../controller/user.controller";
+import {
+  signUp,
+  test,
+  signIn,
+  google,
+  updateUser,
+  deleteUser,
+} from "../controller/user.controller";
 import { verifyToken } from "../utils/verifyUser";
 
 const route = Router();
@@ -10,5 +17,6 @@ route.post("/signup", signUp);
 route.post("/signin", signIn);
 route.post("/google", google);
 route.post("/update/:id", verifyToken, updateUser);
+route.delete("/delete/:id", verifyToken, deleteUser);
 
 export default route;

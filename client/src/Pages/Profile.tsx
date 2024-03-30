@@ -11,6 +11,9 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
 } from "../redux/user/userSlice.js";
 import axios from "axios";
 
@@ -22,7 +25,7 @@ export default function Profile() {
   const [fileUploadPercentage, setFileUploadPercentage] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  const [updateSuccess, setUpdateSuccess] = useState(false)
+  const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
 
   const handleFileUpload = (file: Blob | ArrayBuffer) => {
@@ -84,9 +87,28 @@ export default function Profile() {
       console.log("Data you want to print", data);
 
       dispatch(updateUserSuccess(data));
-      setUpdateSuccess(true)
+      setUpdateSuccess(true);
     } catch (error) {
       dispatch(updateUserFailure(error.response.data.message));
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+
+      const { data } = await axios.delete(
+        `/api/user/delete/${currentUser._id}`
+      );
+
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return
+      }
+
+      dispatch(deleteUserSuccess(data))
+    } catch (error) {
+      dispatch(deleteUserFailure(error.response.data.message));
     }
   };
 
@@ -149,20 +171,27 @@ export default function Profile() {
             onChange={handleChange}
           />
 
-          <button disabled={loading} className="bg-slate-700 rounded-md p-3 text-xl uppercase text-white hover:opacity-95 disabled:opacity-80">
-            {loading ? 'Loading...' : 'Update'}
+          <button
+            disabled={loading}
+            className="bg-slate-700 rounded-md p-3 text-xl uppercase text-white hover:opacity-95 disabled:opacity-80"
+          >
+            {loading ? "Loading..." : "Update"}
           </button>
           <button className="bg-green-700 rounded-md p-3 text-xl uppercase text-white hover:opacity-95 disabled:opacity-80">
             Create Listing
           </button>
         </form>
         <div className="flex justify-between p-3 font-semibold text-md text-red-700">
-          <span>Delete Account</span>
-          <span>Sign Out</span>
+          <span onClick={handleDeleteUser} className='hover:underline  cursor-pointer'>Delete Account</span>
+          <span className='hover:underline  cursor-pointer'>Sign Out</span>
         </div>
 
-        <p className='text-red-700 font-semibold text-center'>{error ? error : ''}</p> 
-        <p className='text-green-700 font-semibold text-center'>{updateSuccess ? 'Update Successful' : ''}</p> 
+        <p className="text-red-700 font-semibold text-center">
+          {error ? error : ""}
+        </p>
+        <p className="text-green-700 font-semibold text-center">
+          {updateSuccess ? "Update Successful" : ""}
+        </p>
       </div>
     </>
   );

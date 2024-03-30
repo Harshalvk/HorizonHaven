@@ -84,7 +84,6 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
       req.body.password = bcrypt.hashSync(req.body.password, 10);
     }
 
-    
     const updatedUser = await User.findByIdAndUpdate(
       req.user.id,
       {
@@ -106,4 +105,17 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { test, signIn, signUp, google, updateUser };
+const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+  if (req.user.id !== req.params.id)
+    return next(errorHandler(401, "You can only delete your own account!"));
+
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.clearCookie("access_token");
+    res.status(200).json("User has been deleted!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { test, signIn, signUp, google, updateUser, deleteUser };
