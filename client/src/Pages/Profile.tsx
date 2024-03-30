@@ -14,6 +14,9 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signoutUserStart,
+  signoutUserSuccess,
+  signoutUserFailure,
 } from "../redux/user/userSlice.js";
 import axios from "axios";
 
@@ -103,12 +106,27 @@ export default function Profile() {
 
       if (data.success === false) {
         dispatch(deleteUserFailure(data.message));
-        return
+        return;
       }
 
-      dispatch(deleteUserSuccess(data))
+      dispatch(deleteUserSuccess(data));
     } catch (error) {
       dispatch(deleteUserFailure(error.response.data.message));
+    }
+  };
+
+  const handleSignout = async () => {
+    try {
+      dispatch(signoutUserStart());
+      const { data } = await axios.get("/api/user/signout");
+
+      if (data.success === false) {
+        dispatch(signoutUserFailure(data.message));
+        return;
+      }
+      dispatch(signoutUserSuccess(data));
+    } catch (error) {
+      dispatch(signoutUserFailure(error.response.data.message));
     }
   };
 
@@ -182,8 +200,18 @@ export default function Profile() {
           </button>
         </form>
         <div className="flex justify-between p-3 font-semibold text-md text-red-700">
-          <span onClick={handleDeleteUser} className='hover:underline  cursor-pointer'>Delete Account</span>
-          <span className='hover:underline  cursor-pointer'>Sign Out</span>
+          <span
+            onClick={handleDeleteUser}
+            className="hover:underline  cursor-pointer"
+          >
+            Delete Account
+          </span>
+          <span
+            onClick={handleSignout}
+            className="hover:underline  cursor-pointer"
+          >
+            Sign Out
+          </span>
         </div>
 
         <p className="text-red-700 font-semibold text-center">
