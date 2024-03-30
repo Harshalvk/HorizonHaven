@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import userRouter from "./routes/user.routes";
+import listingRouter from './routes/listing.routes'
 
 dotenv.config();
 const app = express();
@@ -16,6 +17,7 @@ app.use(cors());
 app.use(cookieParser());
 
 app.use("/api/user", userRouter);
+app.use("/api/listing", listingRouter);
 
 type Error = {
   statusCode: number | 500;
