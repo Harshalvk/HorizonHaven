@@ -76,7 +76,7 @@ const google = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const updateUser = async (req, res, next) => {
+const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   if (req.user.id !== req.params.id)
     return next(errorHandler(401, "You can only update your own account!"));
   try {
@@ -84,6 +84,7 @@ const updateUser = async (req, res, next) => {
       req.body.password = bcrypt.hashSync(req.body.password, 10);
     }
 
+    
     const updatedUser = await User.findByIdAndUpdate(
       req.user.id,
       {
@@ -100,6 +101,7 @@ const updateUser = async (req, res, next) => {
     const { password, ...rest } = updatedUser._doc;
     res.status(200).json(rest);
   } catch (error) {
+    error.status = error.status || 500;
     next(error);
   }
 };

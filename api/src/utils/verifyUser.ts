@@ -3,8 +3,8 @@ import { errorHandler } from "./errorHandler";
 import jwt from "jsonwebtoken";
 
 export const verifyToken = (
-  req: Response,
-  res: Request,
+  req: Request,
+  res: Response,
   next: NextFunction
 ) => {
   const token = req.cookies.access_token;

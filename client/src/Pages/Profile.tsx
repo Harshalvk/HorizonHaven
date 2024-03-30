@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import {
   getDownloadURL,
@@ -7,16 +7,23 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase.js";
+import {
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure,
+} from "../redux/user/userSlice.js";
+import axios from "axios";
 
 export default function Profile() {
   const inputStyle = "p-3 bg-slate-100 rounded focus:outline-none";
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const fileRef = useRef(null);
   const [file, setFile] = useState(undefined);
   const [fileUploadPercentage, setFileUploadPercentage] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  console.log(formData);
+  const [updateSuccess, setUpdateSuccess] = useState(false)
+  const dispatch = useDispatch();
 
   const handleFileUpload = (file: Blob | ArrayBuffer) => {
     const storage = getStorage(app);
@@ -48,12 +55,47 @@ export default function Profile() {
     }
   }, [file]);
 
+  const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  console.log("formdata", formData);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      dispatch(updateUserStart());
+
+      const { data } = await axios.post(
+        `/api/user/update/${currentUser._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+      console.log("Data you want to print", data);
+
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true)
+    } catch (error) {
+      dispatch(updateUserFailure(error.response.data.message));
+    }
+  };
+
   return (
     <>
       <div className="max-w-lg mx-auto p-3">
         <h1 className="text-center text-3xl font-semibold my-7">Profile</h1>
 
-        <form className="flex flex-col gap-3">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <input
             onChange={(e) => setFile(e.target.files[0])}
             type="file"
@@ -87,23 +129,28 @@ export default function Profile() {
             type="text"
             id="username"
             placeholder="Username"
+            defaultValue={currentUser.username}
             className={inputStyle}
+            onChange={handleChange}
           />
           <input
             type="text"
             id="email"
             placeholder="Email"
+            defaultValue={currentUser.email}
             className={inputStyle}
+            onChange={handleChange}
           />
           <input
-            type="text"
+            type="password"
             id="password"
             placeholder="Password"
             className={inputStyle}
+            onChange={handleChange}
           />
 
-          <button className="bg-slate-700 rounded-md p-3 text-xl uppercase text-white hover:opacity-95 disabled:opacity-80">
-            Update
+          <button disabled={loading} className="bg-slate-700 rounded-md p-3 text-xl uppercase text-white hover:opacity-95 disabled:opacity-80">
+            {loading ? 'Loading...' : 'Update'}
           </button>
           <button className="bg-green-700 rounded-md p-3 text-xl uppercase text-white hover:opacity-95 disabled:opacity-80">
             Create Listing
@@ -113,6 +160,9 @@ export default function Profile() {
           <span>Delete Account</span>
           <span>Sign Out</span>
         </div>
+
+        <p className='text-red-700 font-semibold text-center'>{error ? error : ''}</p> 
+        <p className='text-green-700 font-semibold text-center'>{updateSuccess ? 'Update Successful' : ''}</p> 
       </div>
     </>
   );
