@@ -1,6 +1,7 @@
 import express, { Request, Response, Errback, NextFunction } from "express";
 import connectDB from "./db";
 import cors from "cors";
+import cookieParser from 'cookie-parser'
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -13,15 +14,16 @@ connectDB();
 
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser())
 
 app.use("/api/user", userRouter);
+
 
 type Error = {
   statusCode: number | 500,
   message: string | 'Internal server error'
   success: boolean | false
 }
-
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   const statusCode = err.statusCode

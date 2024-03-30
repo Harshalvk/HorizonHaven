@@ -4,15 +4,11 @@ import bcrypt from "bcryptjs";
 import { errorHandler } from "../utils/errorHandler";
 import jwt from "jsonwebtoken";
 
-export const test = (req: Request, res: Response) => {
+const test = (req: Request, res: Response) => {
   res.send({ msg: "Test route" });
 };
 
-export const signUp = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const signUp = async (req: Request, res: Response, next: NextFunction) => {
   const { username, email, password } = req.body;
   const findUser = await User.findOne({ email });
   if (!findUser) {
@@ -26,11 +22,7 @@ export const signUp = async (
   }
 };
 
-export const signIn = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const signIn = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
   try {
     const validUser = await User.findOne({ email });
@@ -48,11 +40,7 @@ export const signIn = async (
   }
 };
 
-export const google = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const google = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (user) {
@@ -87,3 +75,33 @@ export const google = async (
     next(error);
   }
 };
+
+const updateUser = async (req, res, next) => {
+  if (req.user.id !== req.params.id)
+    return next(errorHandler(401, "You can only update your own account!"));
+  try {
+    if (req.body.password) {
+      req.body.password = bcrypt.hashSync(req.body.password, 10);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      {
+        $set: {
+          username: req.body.username,
+          email: req.body.email,
+          password: req.body.password,
+          avatar: req.body.avatar,
+        },
+      },
+      { new: true }
+    );
+
+    const { password, ...rest } = updatedUser._doc;
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { test, signIn, signUp, google, updateUser };
