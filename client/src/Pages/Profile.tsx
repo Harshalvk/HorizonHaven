@@ -19,6 +19,7 @@ import {
   signoutUserFailure,
 } from "../redux/user/userSlice.js";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   const inputStyle = "p-3 bg-slate-100 rounded focus:outline-none";
@@ -195,9 +196,9 @@ export default function Profile() {
           >
             {loading ? "Loading..." : "Update"}
           </button>
-          <button className="bg-green-700 rounded-md p-3 text-xl uppercase text-white hover:opacity-95 disabled:opacity-80">
+          <Link to={'/create-listing'} className="bg-green-700 text-center rounded-md p-3 text-xl uppercase text-white hover:opacity-95 disabled:opacity-80">
             Create Listing
-          </button>
+          </Link>
         </form>
         <div className="flex justify-between p-3 font-semibold text-md text-red-700">
           <span
