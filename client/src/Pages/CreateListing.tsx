@@ -8,6 +8,7 @@ import {
 import { app } from "../firebase.js";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import {useNavigate} from 'react-router-dom'
 
 interface formDataProps {
   imageUrls: File[];
@@ -27,6 +28,7 @@ interface formDataProps {
 const CreateListing: React.FC = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [files, setFiles] = useState<File[]>([]);
+  const navigate = useNavigate()
   const [formData, setFormData] = useState<formDataProps>({
     imageUrls: [],
     name: "",
@@ -36,17 +38,16 @@ const CreateListing: React.FC = () => {
     bedrooms: 1,
     bathrooms: 1,
     regularPrice: 50,
-    discountPrice: 50,
+    discountPrice: 0,
     offer: false,
     parking: false,
     furnished: false,
   });
-  console.log(formData);
   const [imageUploadError, setImageUploadError] = useState<string | boolean>(
     false
   );
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | boolean>(false);
   const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,7 +137,14 @@ const CreateListing: React.FC = () => {
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     try {
+      if (formData.imageUrls.length < 1)
+        return setError("You must upload atleast one image");
+      if (+formData.regularPrice < +formData.discountPrice)
+        return setError(
+          "Discounted Price must be lower than the Regular Price"
+        );
       setLoading(true);
       setError(false);
 
@@ -151,6 +159,8 @@ const CreateListing: React.FC = () => {
       if (data.success === false) {
         setError(data.message);
       }
+
+      navigate(`/listing/${data._id}`)
     } catch (error) {
       setError(error.message);
       setLoading(false);
@@ -286,26 +296,35 @@ const CreateListing: React.FC = () => {
                 value={formData.regularPrice}
               />
               <div className="flex flex-col items-center">
-                <p className="font-semibold">Regular Price </p>
-                <span className="text-xs font-semibold">($ / Month)</span>
+                {formData.type === "sale" ? (
+                  <span className="font-semibold">Price($)</span>
+                ) : (
+                  <>
+                    <p className="font-semibold">Regular Price </p>
+                    <span className="text-xs font-semibold">($ / Month)</span>
+                  </>
+                )}
               </div>
             </div>
-            <div className="flex gap-2 items-center">
-              <input
-                type="number"
-                id="discountPrice"
-                min="50"
-                max="10000"
-                className="p-2 border border-gray-400 rounded-lg focus:outline-none"
-                required
-                onChange={handleChange}
-                value={formData.discountPrice}
-              />
-              <div className="flex flex-col items-center">
-                <p className="font-semibold">Discounted Price </p>
-                <span className="text-xs font-semibold">($ / Month)</span>
+
+            {formData.offer && (
+              <div className="flex gap-2 items-center">
+                <input
+                  type="number"
+                  id="discountPrice"
+                  min="0"
+                  max="10000"
+                  className="p-2 border border-gray-400 rounded-lg focus:outline-none"
+                  required
+                  onChange={handleChange}
+                  value={formData.discountPrice}
+                />
+                <div className="flex flex-col items-center">
+                  <p className="font-semibold">Discounted Price </p>
+                  <span className="text-xs font-semibold">($ / Month)</span>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -356,7 +375,7 @@ const CreateListing: React.FC = () => {
                 </button>
               </div>
             ))}
-          <button className="w-full p-3 bg-slate-700 rounded uppercase text-white hover:opacity-95 ">
+          <button disabled={loading || uploading} className="w-full p-3 bg-slate-700 rounded uppercase text-white hover:opacity-95 disabled:opacity-85">
             {loading ? "Creating..." : "Create Listing"}
           </button>
           {error && (
