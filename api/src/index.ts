@@ -4,7 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import userRouter from "./routes/user.routes";
-import listingRouter from './routes/listing.routes'
+import listingRouter from "./routes/listing.routes";
 
 dotenv.config();
 const app = express();
@@ -20,7 +20,7 @@ app.use("/api/user", userRouter);
 app.use("/api/listing", listingRouter);
 
 type Error = {
-  statusCode: number | 500;
+  statusCode: number | 200;
   message: string | "Internal server error";
   success: boolean | false;
 };

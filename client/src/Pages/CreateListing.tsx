@@ -6,14 +6,49 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase.js";
+import axios from "axios";
+import { useSelector } from "react-redux";
+
+interface formDataProps {
+  imageUrls: File[];
+  name: string;
+  description: string;
+  address: string;
+  type: string;
+  bedrooms: number;
+  bathrooms: number;
+  regularPrice: number;
+  discountPrice: number;
+  offer: boolean;
+  parking: boolean;
+  furnished: boolean;
+}
 
 const CreateListing: React.FC = () => {
+  const { currentUser } = useSelector((state) => state.user);
   const [files, setFiles] = useState<File[]>([]);
-  const [formData, setFormData] = useState({ imageUrls: [] });
+  const [formData, setFormData] = useState<formDataProps>({
+    imageUrls: [],
+    name: "",
+    description: "",
+    address: "",
+    type: "rent",
+    bedrooms: 1,
+    bathrooms: 1,
+    regularPrice: 50,
+    discountPrice: 50,
+    offer: false,
+    parking: false,
+    furnished: false,
+  });
+  console.log(formData)
   const [imageUploadError, setImageUploadError] = useState<string | boolean>(
     false
   );
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  console.log(formData);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiles(e.target.files);
@@ -78,12 +113,59 @@ const CreateListing: React.FC = () => {
     });
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.id === "sale" || e.target.id === "rent") {
+      setFormData({ ...formData, type: e.target.id });
+    }
+
+    if (
+      e.target.id === "parking" ||
+      e.target.id === "furnished" ||
+      e.target.id === "offer"
+    ) {
+      setFormData({ ...formData, [e.target.id]: e.target.checked });
+    }
+
+    if (
+      e.target.type === "number" ||
+      e.target.type === "text" ||
+      e.target.type === "textarea"
+    ) {
+      setFormData({ ...formData, [e.target.id]: e.target.value });
+    }
+  };
+
+  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      setError(false);
+      const { data } = await axios.post(
+        `/api/listing/create`,
+        { formData, userRef: currentUser._id },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(data);
+      setLoading(false);
+      if (data.success === false) {
+        setError(data.message);
+      }
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
         Create a Listing
       </h1>
-      <form className="flex flex-col sm:flex-row gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
         <div className="flex flex-col gap-4 flex-1">
           <input
             placeholder="Name"
@@ -93,6 +175,8 @@ const CreateListing: React.FC = () => {
             maxLength="62"
             minLength="10"
             required
+            onChange={handleChange}
+            value={formData.name}
           />
           <textarea
             placeholder="Description"
@@ -100,6 +184,8 @@ const CreateListing: React.FC = () => {
             id="description"
             className="rounded-lg border p-3 focus:outline-none"
             required
+            onChange={handleChange}
+            value={formData.description}
           />
           <input
             placeholder="Address"
@@ -107,27 +193,59 @@ const CreateListing: React.FC = () => {
             id="address"
             className="p-3 rounded-lg focus:outline-none"
             required
+            onChange={handleChange}
+            value={formData.address}
           />
 
           <div className="flex gap-4 flex-wrap">
             <div className="flex gap-2">
-              <input type="checkbox" id="sale" className="w-5" />
+              <input
+                type="checkbox"
+                id="sale"
+                className="w-5"
+                onChange={handleChange}
+                checked={formData.type === "sale"}
+              />
               <span className="font-semibold text-md">Sell</span>
             </div>
             <div className="flex gap-2">
-              <input type="checkbox" id="rent" className="w-5" />
+              <input
+                type="checkbox"
+                id="rent"
+                className="w-5"
+                onChange={handleChange}
+                checked={formData.type === "rent"}
+              />
               <span className="font-semibold text-md">Rent</span>
             </div>
             <div className="flex gap-2">
-              <input type="checkbox" id="parking" className="w-5" />
+              <input
+                type="checkbox"
+                id="parking"
+                className="w-5"
+                onChange={handleChange}
+                checked={formData.parking === true}
+              />
               <span className="font-semibold text-md">Parking spot</span>
             </div>
             <div className="flex gap-2">
-              <input type="checkbox" id="furnished" className="w-5" />
+              <input
+                type="checkbox"
+                id="furnished"
+                className="w-5"
+                onChange={handleChange}
+                checked={formData.furnished === true}
+              />
               <span className="font-semibold text-md">Furnished</span>
             </div>
             <div className="flex gap-2">
-              <input type="checkbox" id="offer" className="w-5" />
+              <input
+                type="checkbox"
+                id="offer"
+                className="w-5"
+                onChange={handleChange}
+                checked={formData.offer === true}
+              />
               <span className="font-semibold text-md">Offer</span>
             </div>
           </div>
@@ -141,6 +259,8 @@ const CreateListing: React.FC = () => {
                 max="10"
                 className="p-2 border border-gray-400 rounded-lg focus:outline-none"
                 required
+                onChange={handleChange}
+                value={formData.bedrooms}
               />
               <span className="font-semibold">Beds</span>
             </div>
@@ -152,6 +272,8 @@ const CreateListing: React.FC = () => {
                 max="10"
                 className="p-2 border border-gray-400 rounded-lg focus:outline-none"
                 required
+                onChange={handleChange}
+                value={formData.bathrooms}
               />
               <span className="font-semibold">Baths</span>
             </div>
@@ -159,10 +281,12 @@ const CreateListing: React.FC = () => {
               <input
                 type="number"
                 id="regularPrice"
-                min="0"
-                max="10"
+                min="50"
+                max="100000"
                 className="p-2 border border-gray-400 rounded-lg focus:outline-none"
                 required
+                onChange={handleChange}
+                value={formData.regularPrice}
               />
               <div className="flex flex-col items-center">
                 <p className="font-semibold">Regular Price </p>
@@ -173,10 +297,12 @@ const CreateListing: React.FC = () => {
               <input
                 type="number"
                 id="discountPrice"
-                min="0"
-                max="10"
+                min="50"
+                max="10000"
                 className="p-2 border border-gray-400 rounded-lg focus:outline-none"
                 required
+                onChange={handleChange}
+                value={formData.discountPrice}
               />
               <div className="flex flex-col items-center">
                 <p className="font-semibold">Discounted Price </p>
@@ -234,8 +360,13 @@ const CreateListing: React.FC = () => {
               </div>
             ))}
           <button className="w-full p-3 bg-slate-700 rounded uppercase text-white hover:opacity-95 ">
-            Create Listing
+            {loading ? "Creating..." : "Create Listing"}
           </button>
+          {error && (
+            <p className="text-red-700 text-sx font-semibold text-center">
+              {error}
+            </p>
+          )}
         </div>
       </form>
     </main>

@@ -74,7 +74,7 @@ export default function Profile() {
     try {
       dispatch(updateUserStart());
 
-      const { data } = await axios.post(
+      const {data} = await axios.post(
         `/api/user/update/${currentUser._id}`,
         formData,
         {
@@ -88,7 +88,7 @@ export default function Profile() {
         dispatch(updateUserFailure(data.message));
         return;
       }
-      console.log("Data you want to print", data);
+      // console.log("Data you want to print", data);
 
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
