@@ -37,7 +37,7 @@ const CreateListing: React.FC = () => {
           setUploading(false);
         })
         .catch((error) => {
-          setImageUploadError("Image upload error File size 2MB(Max)");
+          setImageUploadError("Image upload error (max 2MB per image)");
           setUploading(false);
         });
     } else {
