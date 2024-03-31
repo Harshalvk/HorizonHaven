@@ -41,14 +41,13 @@ const CreateListing: React.FC = () => {
     parking: false,
     furnished: false,
   });
-  console.log(formData)
+  console.log(formData);
   const [imageUploadError, setImageUploadError] = useState<string | boolean>(
     false
   );
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  console.log(formData);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiles(e.target.files);
@@ -140,17 +139,15 @@ const CreateListing: React.FC = () => {
     try {
       setLoading(true);
       setError(false);
+
       const { data } = await axios.post(
-        `/api/listing/create`,
-        { formData, userRef: currentUser._id },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        "/api/listing/create",
+        { ...formData, userRef: currentUser._id },
+        { headers: { "Content-Type": "application/json" } }
       );
-      console.log(data);
+
       setLoading(false);
+
       if (data.success === false) {
         setError(data.message);
       }

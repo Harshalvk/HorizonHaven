@@ -20,7 +20,7 @@ app.use("/api/user", userRouter);
 app.use("/api/listing", listingRouter);
 
 type Error = {
-  statusCode: number | 200;
+  statusCode: number | 500;
   message: string | "Internal server error";
   success: boolean | false;
 };
