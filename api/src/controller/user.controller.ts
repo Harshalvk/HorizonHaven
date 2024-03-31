@@ -3,6 +3,7 @@ import User from "../models/user.model";
 import bcrypt from "bcryptjs";
 import { errorHandler } from "../utils/errorHandler";
 import jwt from "jsonwebtoken";
+import Listing from "../models/listing.model";
 
 const test = (req: Request, res: Response) => {
   res.send({ msg: "Test route" });
@@ -127,4 +128,30 @@ const signOut = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { test, signIn, signUp, google, updateUser, deleteUser, signOut };
+const getUserListings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.user.id === req.params.id) {
+    try {
+      const listings = await Listing.find({ userRef: req.params.id });
+      res.status(200).json(listings);
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    return next(errorHandler(401, "You can only view your own listings"));
+  }
+};
+
+export {
+  test,
+  signIn,
+  signUp,
+  google,
+  updateUser,
+  deleteUser,
+  signOut,
+  getUserListings,
+};

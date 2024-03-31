@@ -7,6 +7,7 @@ import {
   updateUser,
   deleteUser,
   signOut,
+  getUserListings,
 } from "../controller/user.controller";
 import { verifyToken } from "../utils/verifyUser";
 
@@ -19,5 +20,6 @@ route.post("/google", google);
 route.post("/update/:id", verifyToken, updateUser);
 route.delete("/delete/:id", verifyToken, deleteUser);
 route.get("/signout", signOut);
+route.get('/listings/:id', verifyToken, getUserListings)
 
 export default route;
