@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -30,6 +31,9 @@ export default function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [showListingsError, setShowListingsError] = useState(false);
+  const [userListings, setUserListings] = useState([]);
+  const [deleteListingError, setDeleteListingError] = useState(false);
   const dispatch = useDispatch();
 
   const handleFileUpload = (file: Blob | ArrayBuffer) => {
@@ -74,7 +78,7 @@ export default function Profile() {
     try {
       dispatch(updateUserStart());
 
-      const {data} = await axios.post(
+      const { data } = await axios.post(
         `/api/user/update/${currentUser._id}`,
         formData,
         {
@@ -128,6 +132,38 @@ export default function Profile() {
       dispatch(signoutUserSuccess(data));
     } catch (error) {
       dispatch(signoutUserFailure(error.response.data.message));
+    }
+  };
+
+  const handleShowListings = async () => {
+    try {
+      setShowListingsError(false);
+      const { data } = await axios.get(`/api/user/listings/${currentUser._id}`);
+      if (data.success === false) {
+        setShowListingsError(true);
+        return;
+      }
+      setUserListings(data);
+    } catch (error) {
+      setShowListingsError(true);
+    }
+  };
+
+  const handleListingDelete = async (listingId) => {
+    try {
+      setDeleteListingError(false);
+      const { data } = await axios.delete(
+        `/api/listing/delete/${listingId}`
+      );
+      if (data.success === false) {
+        setDeleteListingError(true);
+        return;
+      }
+      setUserListings((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
+    } catch (error) {
+      setDeleteListingError(true);
     }
   };
 
@@ -196,7 +232,10 @@ export default function Profile() {
           >
             {loading ? "Loading..." : "Update"}
           </button>
-          <Link to={'/create-listing'} className="bg-green-700 text-center rounded-md p-3 text-xl uppercase text-white hover:opacity-95 disabled:opacity-80">
+          <Link
+            to={"/create-listing"}
+            className="bg-green-700 text-center rounded-md p-3 text-xl uppercase text-white hover:opacity-95 disabled:opacity-80"
+          >
             Create Listing
           </Link>
         </form>
@@ -221,6 +260,58 @@ export default function Profile() {
         <p className="text-green-700 font-semibold text-center">
           {updateSuccess ? "Update Successful" : ""}
         </p>
+        <button
+          onClick={handleShowListings}
+          className="text-green-700 font-semibold hover:underline w-full"
+        >
+          Show Listings
+        </button>
+        <p className="text-red-700 mt-5 text-center font-semibold">
+          {showListingsError ? "Error showing listings" : ""}
+        </p>
+
+        {userListings && userListings.length > 0 && (
+          <div className="flex flex-col gap-6">
+            <h1 className="text-center text-2xl font-semibold">
+              Your Listings
+            </h1>
+            <p className="text-red-700 text-center font-semibold">
+              {deleteListingError ? "Error: Listing not deleted!" : ""}
+            </p>
+            {userListings.map((listing) => (
+              <div
+                key={listing._id}
+                className={`flex items-center justify-between p-3 gap-4 border-b border-gray-500/30`}
+              >
+                <Link to={`/listing/${listing._id}`}>
+                  <img
+                    src={listing.imageUrls[0]}
+                    alt="listing cover"
+                    className="w-30 h-20 rounded shadow-md object-contain"
+                  />
+                </Link>
+                <Link
+                  to={`/listing/${listing._id}`}
+                  className="font-semibold text-md hover:underline truncate flex-1"
+                >
+                  <p>{listing.name}</p>
+                </Link>
+
+                <div className="flex flex-col">
+                  <button
+                    onClick={() => handleListingDelete(listing._id)}
+                    className="text-red-700 font-semibold hover:underline"
+                  >
+                    Delete
+                  </button>
+                  <button className="text-green-700 font-semibold hover:underline">
+                    Edit
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
