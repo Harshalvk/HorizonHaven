@@ -152,9 +152,7 @@ export default function Profile() {
   const handleListingDelete = async (listingId) => {
     try {
       setDeleteListingError(false);
-      const { data } = await axios.delete(
-        `/api/listing/delete/${listingId}`
-      );
+      const { data } = await axios.delete(`/api/listing/delete/${listingId}`);
       if (data.success === false) {
         setDeleteListingError(true);
         return;
@@ -304,9 +302,11 @@ export default function Profile() {
                   >
                     Delete
                   </button>
-                  <button className="text-green-700 font-semibold hover:underline">
-                    Edit
-                  </button>
+                  <Link to={`/update-listing/${listing._id}`}>
+                    <button className="text-green-700 font-semibold hover:underline">
+                      Edit
+                    </button>
+                  </Link>
                 </div>
               </div>
             ))}
