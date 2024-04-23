@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
 import "swiper/css/bundle";
+import { useSelector } from "react-redux";
 import {
   FaBath,
   FaBed,
@@ -14,6 +15,7 @@ import {
   FaParking,
   FaShare,
 } from "react-icons/fa";
+import Contact from "../Components/Contact";
 
 const Listing = () => {
   SwiperCore.use([Navigation]);
@@ -21,8 +23,10 @@ const Listing = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
-
+  const [contact, setContact] = useState(false)
   const params = useParams();
+  const { currentUser } = useSelector((state) => state.user);
+
   console.log(listing);
 
   useEffect(() => {
@@ -125,17 +129,22 @@ const Listing = () => {
               </li>
               <li className="flex items-center gap-1 whitespace-nowrap">
                 <FaParking className="text-md" />
-                {listing.parking === true
-                  ? `Parking Available`
-                  : `No Parking`}
+                {listing.parking === true ? `Parking Available` : `No Parking`}
               </li>
               <li className="flex items-center gap-1 whitespace-nowrap">
                 <FaChair className="text-md" />
-                {listing.furnished === true
-                  ? `Furnished`
-                  : `Not Furnished`}
+                {listing.furnished === true ? `Furnished` : `Not Furnished`}
               </li>
             </ul>
+            {currentUser && listing.userRef !== currentUser._id && !contact &&(
+              <button 
+                className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3"
+                onClick={() => setContact(true)}
+              >
+                Contact Landloard
+              </button>
+            )}
+            {contact && <Contact listing={listing}/>}
           </div>
         </div>
       )}
