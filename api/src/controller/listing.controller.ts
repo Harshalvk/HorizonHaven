@@ -83,7 +83,7 @@ const getListings = async (req: Request, res: Response, next: NextFunction) => {
     if (offer === undefined || offer === "false") {
       offer = { $in: [false, true] };
     }
-
+    console.log(offer);
     let furnished = req.query.furnished;
     if (furnished === undefined || furnished === "false") {
       furnished = { $in: [false, true] };
@@ -103,7 +103,7 @@ const getListings = async (req: Request, res: Response, next: NextFunction) => {
 
     const sort = req.query.sort || "createdAt";
 
-    const order = req.query.sort || "desc";
+    const order = req.query.order || "desc";
 
     const listing = await Listing.find({
       name: { $regex: searchTerm, $options: "i" },

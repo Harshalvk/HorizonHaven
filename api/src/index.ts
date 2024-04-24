@@ -20,15 +20,15 @@ app.use("/api/user", userRouter);
 app.use("/api/listing", listingRouter);
 
 type Error = {
-  statusCode: number | 500;
-  message: string | "Internal server error";
-  success: boolean | false;
+  statusCode: number;
+  message: string;
+  success: boolean;
 };
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  const statusCode = err.statusCode;
-  const message = err.message;
-  const success = err.success;
+  const statusCode = err.statusCode || 200;
+  const message = err.message || "Internal server error";
+  const success = err.success || false;
   return res.status(statusCode).json({
     success,
     statusCode,
