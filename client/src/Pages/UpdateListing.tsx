@@ -25,7 +25,7 @@ interface formDataProps {
   furnished: boolean;
 }
 
-const CreateListing: React.FC = () => {
+const UpdateListing: React.FC = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [files, setFiles] = useState<File[]>([]);
   const navigate = useNavigate();
@@ -394,7 +394,7 @@ const CreateListing: React.FC = () => {
             disabled={loading || uploading}
             className="w-full p-3 bg-slate-700 rounded uppercase text-white hover:opacity-95 disabled:opacity-85"
           >
-            {loading ? "Creating..." : "Update Listing"}
+            {loading ? "Updating..." : "Update Listing"}
           </button>
           {error && (
             <p className="text-red-700 text-sx font-semibold text-center">
@@ -407,4 +407,4 @@ const CreateListing: React.FC = () => {
   );
 };
 
-export default CreateListing;
+export default UpdateListing;
