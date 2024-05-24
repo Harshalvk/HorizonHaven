@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { Autoplay, Navigation } from "swiper/modules";
 import SwiperCore from "swiper";
 import "swiper/css/bundle";
 import ListingItem from "../Components/ListingItem";
@@ -70,7 +70,15 @@ export default function Home() {
       </div>
 
       {/* Swiper */}
-      <Swiper navigation>
+      <Swiper
+        navigation
+        centeredSlides={true}
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
+        modules={[Autoplay]}
+      >
         {offerListings &&
           offerListings.length > 0 &&
           offerListings.map((listing) => (
@@ -92,8 +100,15 @@ export default function Home() {
         {offerListings && offerListings.length > 0 && (
           <div>
             <div className="my-5">
-              <h1 className="text-slate-600 font-bold text-2xl">Recent Offers</h1>
-              <Link className="text-blue-700 hover:underline" to={"/search?offer=true"}>Show more offers</Link>
+              <h1 className="text-slate-600 font-bold text-2xl">
+                Recent Offers
+              </h1>
+              <Link
+                className="text-blue-700 hover:underline"
+                to={"/search?offer=true"}
+              >
+                Show more offers
+              </Link>
             </div>
             <div className="flex flex-wrap gap-4">
               {offerListings.map((listing) => (
@@ -108,8 +123,15 @@ export default function Home() {
         {rentListings && rentListings.length > 0 && (
           <div>
             <div className="my-5">
-              <h1 className="text-slate-600 font-bold text-2xl">Recent places for Rent</h1>
-              <Link className="text-blue-700 hover:underline" to={"/search?type=rent"}>Show more places for Rent</Link>
+              <h1 className="text-slate-600 font-bold text-2xl">
+                Recent places for Rent
+              </h1>
+              <Link
+                className="text-blue-700 hover:underline"
+                to={"/search?type=rent"}
+              >
+                Show more places for Rent
+              </Link>
             </div>
             <div className="flex flex-wrap gap-4">
               {rentListings.map((listing) => (
@@ -119,13 +141,20 @@ export default function Home() {
           </div>
         )}
       </div>
-      
+
       <div className="max-w-[1400px] mx-auto p-3 flex flex-col gap-8 my-10">
         {saleListings && saleListings.length > 0 && (
           <div>
             <div className="my-5">
-              <h1 className="text-slate-600 font-bold text-2xl">Recent places for Sale</h1>
-              <Link className="text-blue-700 hover:underline" to={"/search?type=sale"}>Show more places for Sale</Link>
+              <h1 className="text-slate-600 font-bold text-2xl">
+                Recent places for Sale
+              </h1>
+              <Link
+                className="text-blue-700 hover:underline"
+                to={"/search?type=sale"}
+              >
+                Show more places for Sale
+              </Link>
             </div>
             <div className="flex flex-wrap gap-4">
               {saleListings.map((listing) => (
@@ -136,9 +165,8 @@ export default function Home() {
         )}
       </div>
 
-
       {/* footer */}
-      <Footer/>
+      <Footer />
     </div>
   );
 }
