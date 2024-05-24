@@ -20,13 +20,13 @@ function Navbar() {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromURL = urlParams.get("searchTerm");
-    if(searchTermFromURL){
-      setSearchTerm(searchTermFromURL)
+    if (searchTermFromURL) {
+      setSearchTerm(searchTermFromURL);
     }
   }, [location.search]);
 
   return (
-    <header className=" bg-slate-200 shadow-sm">
+    <header className=" bg-slate-200 shadow-sm sticky top-0 z-50">
       <div className="flex justify-between items-center p-3 max-w-6xl mx-auto">
         <h1 className="font-bold text-md sm:text-xl flex flex-wrap">
           <span className="text-slate-900">Horizon</span>

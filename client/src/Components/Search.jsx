@@ -131,8 +131,11 @@ const Search = () => {
   return (
     <>
       <div className="flex flex-col md:flex-row">
-        <div className="border-slate-400 border-b-[1px] md:border-r-[1px] md:min-h-screen p-7">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <div className="grid grid-cols-7 border-slate-400 border-b-[1px] md:border-r-[1px] md:min-h-screen p-7 box-border">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-5 self-start sticky top-28 col-span-6"
+          >
             <div className="flex items-center gap-2">
               <label className="whitespace-nowrap font-semibold">
                 Search Term:
@@ -232,7 +235,7 @@ const Search = () => {
           </form>
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1 col-span-1">
           <h1 className="p-3 font-semibold text-2xl md:text-3xl text-slate-800">
             Listing Results:
           </h1>
