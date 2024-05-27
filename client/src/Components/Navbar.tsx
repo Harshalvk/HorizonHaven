@@ -3,7 +3,7 @@ import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import logo from "../../public/logo.png";
+import logo from "../../public/logo.svg";
 
 function Navbar() {
   const { currentUser } = useSelector((state) => state.user);
@@ -30,8 +30,8 @@ function Navbar() {
     <header className=" bg-[#ECF2F9] shadow-sm sticky top-0 z-50">
       <div className="flex justify-between items-center p-3 max-w-6xl mx-auto">
         <div className="flex items-center gap-3">
-          <img src={logo} alt="" className="w-8" />
-          <h1 className="font-bold text-main text-md sm:text-xl flex flex-wrap">
+          <img src={logo} alt="" className="w-8 fill-main" />
+          <h1 className="font-bold text-main text-2xl flex flex-wrap">
             HorizonHeaven
           </h1>
         </div>
