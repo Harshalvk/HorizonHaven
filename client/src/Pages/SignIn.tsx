@@ -35,28 +35,27 @@ function SignIn() {
           "Content-Type": "application/json",
         },
       });
-  
-      const data = response.data; 
-  
+
+      const data = response.data;
+
       toast.success("Login Successful!", {
         position: "top-right",
       });
-  
+
       dispatch(signInSuccess(data));
       navigate("/");
-      
+
       if (data.success === false) {
         signInFailure(data.message);
         return;
       }
     } catch (error) {
       dispatch(signInFailure(error.response.data.message));
-      toast.error(error.response.data.message,{
-        position: 'top-right'
-      })
+      toast.error(error.response.data.message, {
+        position: "top-right",
+      });
     }
   };
-  
 
   return (
     <>
@@ -79,15 +78,15 @@ function SignIn() {
           />
           <button
             disabled={loading}
-            className="bg-slate-700 rounded-md p-3 text-xl uppercase text-white hover:bg-slate-600"
+            className="bg-main rounded-md p-3 text-xl uppercase text-white hover:opacity-95"
           >
             {loading ? "Loading..." : "Login"}
           </button>
-          <OAuth/>
+          <OAuth />
         </form>
         <p className="text-center mt-4">
           Create an account?{" "}
-          <span className="text-blue-700 hover:underline">
+          <span className="text-secondary hover:underline">
             <Link to={"/sign-up"}>Sign Up</Link>
           </span>
         </p>
