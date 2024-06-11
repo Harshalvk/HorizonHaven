@@ -226,13 +226,13 @@ export default function Profile() {
 
           <button
             disabled={loading}
-            className="bg-slate-700 rounded-md p-3 text-xl uppercase text-white hover:opacity-95 disabled:opacity-80"
+            className="bg-main rounded-md p-3 text-xl uppercase text-white hover:opacity-95 disabled:opacity-80"
           >
             {loading ? "Loading..." : "Update"}
           </button>
           <Link
             to={"/create-listing"}
-            className="bg-green-700 text-center rounded-md p-3 text-xl uppercase text-white hover:opacity-95 disabled:opacity-80"
+            className="bg-secondary text-center rounded-md p-3 text-xl uppercase text-white hover:opacity-95 disabled:opacity-80"
           >
             Create Listing
           </Link>
@@ -260,7 +260,7 @@ export default function Profile() {
         </p>
         <button
           onClick={handleShowListings}
-          className="text-green-700 font-semibold hover:underline w-full"
+          className="text-secondary font-semibold hover:underline w-full"
         >
           Show Listings
         </button>
@@ -303,7 +303,7 @@ export default function Profile() {
                     Delete
                   </button>
                   <Link to={`/update-listing/${listing._id}`}>
-                    <button className="text-green-700 font-semibold hover:underline">
+                    <button className="text-secondary font-semibold hover:underline">
                       Edit
                     </button>
                   </Link>

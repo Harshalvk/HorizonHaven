@@ -19,7 +19,7 @@ const ListingItem = ({ listing }) => {
           </p>
 
           <div className="flex items-center gap-1 truncate">
-            <MdLocationOn className="text-green-700 h-4 w-4" />
+            <MdLocationOn className="text-main h-4 w-4" />
             <p className="text-sm text-gray truncate w-full">
               {listing.address}
             </p>
@@ -28,7 +28,7 @@ const ListingItem = ({ listing }) => {
             {listing.description}
           </p>
 
-          <p className="text-slate-500 mt-2 font-semibold">
+          <p className="text-slate-500 mt-2 font-semibold text-xl">
             $
             {listing.offer
               ? listing.discountPrice.toLocaleString("en-US")
@@ -38,25 +38,25 @@ const ListingItem = ({ listing }) => {
 
           <div className="flex gap-3 items-center flex-wrap">
             <div className="flex items-center gap-1">
-              <FaBed className="text-green-700" />
+              <FaBed className="text-main" />
               <p className="font-semibold text-slate-500">
                 {listing.bedrooms > 1 ? `${listing.bedrooms} Beds` : `${listing.bedrooms} Bed`} 
               </p>
             </div>
             <div className="flex items-center gap-1">
-              <FaBath className="text-green-700" />
+              <FaBath className="text-main" />
               <p className="font-semibold text-slate-500">
                 {listing.bathrooms > 1 ? `${listing.bathrooms} Baths` : `${listing.bathrooms} Bath`} 
               </p>
             </div>
             <div className="flex items-center gap-1">
-              <FaParking className="text-green-700" />
+              <FaParking className="text-main" />
               <p className="font-semibold text-slate-500">
                 {listing.parking ? "Parking" : "No Parking"}
               </p>
             </div>
             <div className="flex items-center gap-1">
-              <FaChair className="text-green-700" />
+              <FaChair className="text-main" />
               <p className="font-semibold text-slate-500">
                 {listing.furnished ? "Furnished" : "No Furnished"}
               </p>

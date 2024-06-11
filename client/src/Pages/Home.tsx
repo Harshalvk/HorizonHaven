@@ -6,6 +6,7 @@ import SwiperCore from "swiper";
 import "swiper/css/bundle";
 import ListingItem from "../Components/ListingItem";
 import Footer from "../Components/Footer";
+import hero_image from "../../public/hero_image.png";
 
 export default function Home() {
   const [offerListings, setOfferListings] = useState([]);
@@ -49,24 +50,48 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
+    <section className="bg-[#F4F9FF]">
       {/* Top */}
-      <div className="py-28 px-3 max-w-6xl mx-auto flex flex-col gap-6">
-        <h1 className="text-4xl font-bold md:text-6xl text-slate-700">
-          Find your next <span className="text-slate-500">perfect</span> <br />
-          place with ease
-        </h1>
-        <p className="text-gray-500 text-sm md:text-md">
-          HorizonHaven is the best place to find your next perfect place to
-          live. <br />
-          We have a wide range of properties for you to choose from.
-        </p>
-        <Link
-          to={"/search"}
-          className="text-md  text-blue-800 font-semibold hover:underline"
-        >
-          Let's get started...
-        </Link>
+
+      <div className="-mt-5  py-20 px-3 max-w-7xl mx-auto flex gap-6 items-center">
+        <div className="my-6 px-3 space-y-4">
+          <h1 className="text-4xl font-bold md:text-6xl text-secondary">
+            Find your next{" "}
+            <span className="text-secondary underline">perfect</span> <br />
+            place with ease.
+          </h1>
+          <p className="text-state-gray text-md md:text-md">
+            HorizonHaven is the best place to find your next perfect place to
+            live. <br />
+            We have a wide range of properties for you to choose from.
+          </p>
+          <div>
+            <Link
+              to={"/search"}
+              className="text-md text-white py-3 px-2 rounded-md hover:opacity-95 font-semibold  bg-main"
+            >
+              Explore More
+            </Link>
+          </div>
+        </div>
+        <div className="relative hidden lg:block">
+          <img
+            src={hero_image}
+            alt="hero Image"
+            className="rounded-lg shadow-sm"
+          />
+          <div className="bg-white absolute top-20 -right-14 p-3 rounded-md shadow-md font-semibold ">
+            Customer Rating 4.9 ⭐
+          </div>
+          <div className="bg-white text-gray-500 absolute text-center p-3 text-xl font-semibold -bottom-14 left-36 rounded-md shadow-lg">
+            <h2 className="">Buy Your Dream Home</h2>
+            <h1 className="text-2xl text-main font-bold">80+</h1>
+            <h2>Home available</h2>
+            <button className="border border-white/30 bg-main text-white text-sm px-4 py-2 rounded-md shadow-md">
+              View Details
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Swiper */}
@@ -167,6 +192,6 @@ export default function Home() {
 
       {/* footer */}
       <Footer />
-    </div>
+    </section>
   );
 }

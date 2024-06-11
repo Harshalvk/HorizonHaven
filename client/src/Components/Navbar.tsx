@@ -3,6 +3,7 @@ import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import logo from "../../public/logo.svg";
 
 function Navbar() {
   const { currentUser } = useSelector((state) => state.user);
@@ -26,12 +27,15 @@ function Navbar() {
   }, [location.search]);
 
   return (
-    <header className=" bg-slate-200 shadow-sm sticky top-0 z-50">
+    <header className=" bg-[#ECF2F9] shadow-sm sticky top-0 z-50">
       <div className="flex justify-between items-center p-3 max-w-6xl mx-auto">
-        <h1 className="font-bold text-md sm:text-xl flex flex-wrap">
-          <span className="text-slate-900">Horizon</span>
-          <span className="text-slate-500">Haven</span>
-        </h1>
+        <div className="flex items-center gap-3">
+          <img src={logo} alt="" className="w-8 fill-main" />
+          <h1 className="font-bold text-main text-2xl flex flex-wrap">
+            HorizonHeaven
+          </h1>
+        </div>
+
         <form
           onSubmit={handleSubmit}
           className="bg-slate-100 p-3 rounded-md flex items-center gap-3"
@@ -39,7 +43,7 @@ function Navbar() {
           <input
             type="text"
             placeholder="Search"
-            className="bg-transparent focus:outline-none w-24 sm:w-64"
+            className="bg-transparent focus:outline-none w-24 sm:w-64 "
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -47,7 +51,7 @@ function Navbar() {
             <FaSearch className="text-slate-700" />
           </button>
         </form>
-        <ul className="flex gap-2 items-center">
+        <ul className="flex gap-4 items-center">
           <li className="hidden sm:inline font-semibold hover:underline">
             <Link to={"/"}>Home</Link>
           </li>
